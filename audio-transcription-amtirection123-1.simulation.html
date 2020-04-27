@@ -35,6 +35,10 @@ label, input[type=radio], input[type=button] { cursor: pointer; }
 	font-size: 18px;
 }
 
+.hiddencontent {
+	display: none;
+}
+
 .disabled label { color: gray; }
 </style>
 
@@ -59,13 +63,15 @@ label, input[type=radio], input[type=button] { cursor: pointer; }
 <div class="trial count">
 	<span class="trial_number">1.</span>
 	
-	<p><div class="player"><audio preload="auto">
+	<p><div class="player"><audio id="audioplayer" preload="auto">
 		Your browser does not support the <code>audio</code> element. You cannot participate in this HIT.
 		<source src="http://flora.pc.cs.cmu.edu:8081/sample1/nexmo_human.wav" type="audio/mp3">
 	</audio></div></p>
-
+	<div class="hiddencontent">
 	<p><label for="Choice1"> What key information do you remember? For example, what turn should you make, and where should you make the turn? Which floor should you go to? Which elevator to take?</label></p>
 	<input type="text" id="Choice1" name="Choice1" size="30" style="margin-left:60px "/>
+	</div>
+</div>
 </div>
 
 <hr noshade="noshade" />
@@ -107,7 +113,6 @@ $(function() {
 
 		// find the relevant trial
 		var trial = $(this).closest('.trial');
-		
 		// un-gray out the labels:
 		trial.removeClass('disabled');
 		// enable the controls:
@@ -123,6 +128,11 @@ $(function() {
 
 		// play the audio
 		$(this).find('audio').get(0).play();
+	});
+
+	$("#audioplayer").bind('ended', function(){
+    	// done playing
+		$(".hiddencontent").show();
 	});
 
 	// gray out the "natural" and "unnatural" labels:
