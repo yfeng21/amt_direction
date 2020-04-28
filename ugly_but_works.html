@@ -1,0 +1,82 @@
+
+
+<style type="text/css">
+label, input[type=radio], input[type=button] { cursor: pointer; }
+.blue { color: blue; }
+.red { color: red; }
+.trial { padding: 15px 10px; }
+.trial p, .trial table { padding-left: 50px; margin: 3px; }
+.trial table { width: 400px; }
+.trial tr td { width: 50%; text-align: center; }
+.disabled label { color: gray; }
+</style>
+
+<div class="trial">
+	<p> Which version do you prefer?</p>
+	<p>A:<audio id="audioa" controls="controls" preload="auto" onended="turnOnA()">
+		Your browser does not support the <code>audio</code> element. You cannot participate in this HIT.
+		<source src="http://flora.pc.cs.cmu.edu:8081/sample1/nexmo_human.wav" type="audio/mp3">
+	</audio></p>
+	<p>B:<audio id="audiob" controls="controls" preload="auto" onended="turnOnB()">
+		Your browser does not support the <code>audio</code> element. You cannot participate in this HIT.
+		<source src="http://flora.pc.cs.cmu.edu:8081/sample1/nexmo_temp.wav" type="audio/mp3">
+	</audio></p>
+	<table class="count"><tbody>
+		<tr>
+			<td><label for="Choice1A">A</label></td>
+			<td><label for="Choice1B">B</label></td>
+			<td><label for="Choice1E">No Preference</label></td>
+		</tr>
+		<tr>
+			<td><input class="count" type="radio" id="Choice1A" name="Choice1" value="0" /></td>
+			<td><input class="count" type="radio" id="Choice1B" name="Choice1" value="1" /></td>
+			<td><input class="count" type="radio" id="Choice1E" name="Choice1" value="2" /></td>
+		</tr>
+	</tbody></table>
+</div>
+
+<script type='text/javascript'>
+// audio playback code:
+//
+// The following code (a) disables the form elements at page load, and then (b) when some
+// audio is played, reenable the corresponding form elements. This acts as a (weak) check
+// that items can only be answered if the audio was played.
+//
+// If JavaScript is not enabled on the page, the form elements themselves will not be
+// disabled, so there simply will be no check that the audio playback happened. The
+// audio playback itself does not depend on JavaScript being enabled.
+	var aended = false
+	var bended = false
+    function turnOnA(){
+		aended = true
+	}
+
+   function turnOnB(){
+        bended = true
+  }
+$(function() {
+	// gray out the labels:
+	$('.trial').addClass('disabled');
+	// disable the controls themselves:
+	$('.trial input').prop('disabled',true);
+	//this works when audio b ends:
+	$('#audiob').on('ended', function() {
+		if(aended){
+			// find the relevant trial
+			var trial = $(this).closest('.trial');
+			// un-gray out the labels:
+			trial.removeClass('disabled');
+			// enable the controls:
+			trial.find('input').prop('disabled',false);
+	}})
+	$('#audioa').on('ended', function() {
+		if(bended){
+			// find the relevant trial
+			var trial = $(this).closest('.trial');
+			// un-gray out the labels:
+			trial.removeClass('disabled');
+			// enable the controls:
+			trial.find('input').prop('disabled',false);
+	}})
+});
+</script>
